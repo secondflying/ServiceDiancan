@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-2-14 22:19:35 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.chihuo.bussiness.ToolsRel" table="tools_rel" catalog="menuorder">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tools" class="com.chihuo.bussiness.Tools" fetch="select">
+            <column name="tid" />
+        </many-to-one>
+        <many-to-one name="order" class="com.chihuo.bussiness.Order" fetch="select">
+            <column name="oid">
+                <comment>&#178;&#205;&#190;&#223;&#184;&#246;&#202;&#253;</comment>
+            </column>
+        </many-to-one>
+        <property name="number" type="java.lang.Integer">
+            <column name="number" />
+        </property>
+    </class>
+</hibernate-mapping>

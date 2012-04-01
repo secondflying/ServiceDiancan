@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="testfactory">
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <property name="hibernate.connection.characterEncoding">UTF-8</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/menuorder</property>
+        <property name="hibernate.connection.useUnicode">true</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.default_schema">menuorder</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+        <property name="hibernate.show_sql">true</property>
+        <mapping resource="com/chihuo/bussiness/Category.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Recipe.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Desk.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/DataLog.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Order.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/OrderItem.hbm.xml" />
+        
+        <!-- <mapping resource="com/chihuo/bussiness/TagsRel.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Tags.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Tools.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Chef.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Require.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/RequireRel.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/ToolsRel.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Rating.hbm.xml" /> -->
+    </session-factory>
+</hibernate-configuration>

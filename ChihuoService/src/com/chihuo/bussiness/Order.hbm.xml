@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-2-28 10:39:34 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.chihuo.bussiness.Order" table="order">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="desk" class="com.chihuo.bussiness.Desk"  fetch="join">
+            <column name="tid" not-null="true" />
+        </many-to-one>
+        <property name="number" type="java.lang.Integer">
+            <column name="number" />
+        </property>
+        <property name="starttime" type="timestamp">
+            <column name="starttime" length="19" />
+        </property>
+        <property name="ordertime" type="timestamp">
+            <column name="ordertime" length="19" />
+        </property>
+        <property name="enttime" type="timestamp">
+            <column name="enttime" length="19" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="status" />
+        </property>
+        <set name="orderItems" table="order_item" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="oid" />
+            </key>
+            <one-to-many class="com.chihuo.bussiness.OrderItem" />
+        </set>
+    </class>
+</hibernate-mapping>

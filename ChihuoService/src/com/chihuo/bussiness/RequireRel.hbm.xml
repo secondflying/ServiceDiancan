@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-2-14 22:19:35 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.chihuo.bussiness.RequireRel" table="require_rel" catalog="menuorder">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="require" class="com.chihuo.bussiness.Require" fetch="select">
+            <column name="rid" />
+        </many-to-one>
+        <many-to-one name="orderItem" class="com.chihuo.bussiness.OrderItem" fetch="select">
+            <column name="oiid" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

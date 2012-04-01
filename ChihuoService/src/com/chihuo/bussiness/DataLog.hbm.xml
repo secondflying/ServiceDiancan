@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-2-22 16:09:07 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.chihuo.bussiness.DataLog" table="data_log">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="dataTable" type="string">
+            <column name="data_table" length="45" />
+        </property>
+        <property name="did" type="java.lang.Integer">
+            <column name="did" />
+        </property>
+        <property name="addTime" type="timestamp">
+            <column name="add_time" length="19" />
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="update_time" length="19" />
+        </property>
+        <property name="update2Time" type="timestamp">
+            <column name="update2_time" length="19" />
+        </property>
+        <property name="deleteTime" type="timestamp">
+            <column name="delete_time" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-2-14 22:19:35 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.chihuo.bussiness.Rating" table="rating" catalog="menuorder">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="star" type="java.lang.Integer">
+            <column name="star">
+                <comment>&#208;&#199;&#188;&#182;&#197;&#197;&#195;&#251;,1~5&#208;&#199;</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="45">
+                <comment>&#195;&#232;&#202;&#246;&#208;&#197;&#207;&#162;</comment>
+            </column>
+        </property>
+        <set name="orderItems" table="order_item" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="rid" />
+            </key>
+            <one-to-many class="com.chihuo.bussiness.OrderItem" />
+        </set>
+    </class>
+</hibernate-mapping>

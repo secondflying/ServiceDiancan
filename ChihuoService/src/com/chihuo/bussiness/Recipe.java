@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder={"id","name","price","description","image","cid"})
+@XmlType(propOrder={"id","name","price","description","image","cid","cname"})
 public class Recipe implements java.io.Serializable {
 	private Integer id;
 	private Category category;
@@ -87,4 +87,11 @@ public class Recipe implements java.io.Serializable {
 		return null;
 	}
 
+	@XmlElement
+	public String getCname(){
+		if (this.category != null) {
+			return this.category.getName();
+		}
+		return null;
+	}
 }

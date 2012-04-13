@@ -8,7 +8,7 @@
         <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
         <property name="hibernate.connection.characterEncoding">UTF-8</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.password">root</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/menuorder</property>
         <property name="hibernate.connection.useUnicode">true</property>
         <property name="hibernate.connection.username">root</property>

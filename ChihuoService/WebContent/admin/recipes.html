@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>智能点餐管理系统</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- Le styles -->
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+</style>
+<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+<link href="prettyPhoto/css/prettyPhoto.css"  rel="stylesheet" />
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="#">智能点餐管理系统</a>
+
+				<div class="nav-collapse">
+					<ul class="nav">
+						<li class="active"><a href="#">首页</a></li>
+						<li><a href="#about">关于</a></li>
+						<li><a href="#contact">联系我们</a></li>
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+				<div class="btn-group pull-right">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						<i class="icon-user"></i> 管理员 <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Profile</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Sign Out</a></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+
+		<div class="pull-right">
+			<a href="#" class="btn  btn-primary btn-large"><i
+				class="icon-plus-sign icon-white"></i> 新增菜品</a> <a href="#"
+				class="btn  btn-primary btn-large"><i
+				class="icon-pencil icon-white"></i> 批量修改</a>
+		</div>
+		<h2 id="categoryName"></h2>
+
+		<hr style="margin: 9px 0;">
+
+		<ul id="categoriesContainer" class="thumbnails">
+		</ul>
+
+		<hr>
+		<footer>
+			<p>&copy; 三个火枪手科技工作室 2012</p>
+		</footer>
+
+	</div>
+	<!-- /container -->
+
+	<!-- Le javascript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="bootstrap/js/jquery.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="prettyPhoto/js/jquery.prettyPhoto.js"></script>
+	<script src="rest.js"></script>
+	<script>
+	$(document).ready(function() {
+	    $("#categoryName").html(urlParams["cname"]);
+	    
+	    $.getJSON("../rest/categories/" + urlParams["cid"],
+	    function(data) {
+	        console.log(data);
+	        var items = [];
+	        $.each(data,
+	        function(key, val) {
+	            items.push('<li class="span3" id="' + val.id + '">');
+	            items.push('<div class="thumbnail">');
+	            
+	            items.push('<div class="caption">');
+	            items.push('<h3>' + val.name + '<small class="pull-right">¥' + val.price + '</small></h3>');
+	            items.push('</div>');
+	            
+	            items.push('<a rel="prettyPhoto[gallery1]"  href="../MenuImages/' + val.image + '" title="' + val.name  + '">');
+	            items.push('<img style="width:250px; height:250px;" src="../MenuImages/' + val.image + '" />');
+	            items.push('</a>');
+
+	            items.push('<div class="caption">');
+	            items.push('<a href="#" onclick="test(' + key + ');return false;" class="btn btn-info"><i class="icon-edit icon-white"></i> 编辑</a>  ');
+	            items.push('<a href="#" class="btn btn-danger"><i class="icon-trash icon-white"></i> 删除</a>');
+	            items.push('</div>');
+	            
+	            items.push('</div></li>');
+	        });
+	        $(items.join('')).appendTo('#categoriesContainer');
+	        
+	        $("a[rel^='prettyPhoto']").prettyPhoto({
+			    theme: 'facebook',
+			    deeplinking: false,
+			    social_tools: false
+			});
+	    });
+	});
+	
+	</script>
+</body>
+</html>

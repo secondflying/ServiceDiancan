@@ -64,7 +64,7 @@ public class HttpClientDeskTest {
 	}
 
 
-	@Test
+//	@Test
 	public void 新增桌子() throws ClientProtocolException, IOException,
 			JSONException {
 		System.out.println("新增桌子:");

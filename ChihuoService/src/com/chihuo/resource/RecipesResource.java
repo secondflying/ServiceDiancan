@@ -39,8 +39,7 @@ public class RecipesResource {
 	Request request;
 
 	@GET
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON,
-			MediaType.TEXT_XML })
+	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Recipe> getAllRecipes() {
 		RecipeDao dao = new RecipeDao();
 		return dao.findAll();
@@ -62,62 +61,74 @@ public class RecipesResource {
 	@POST
 	@Consumes("multipart/form-data")
 	public Response createRecipe2(MultiPart multipart) {
-		Recipe recipe = new Recipe();
-
-		try {
-			String string = multipart.getBodyParts().get(0)
-					.getEntityAs(String.class);
-			JSONObject jsonObject = new JSONObject(string);
-			recipe.setName(jsonObject.getString("name"));
-			recipe.setPrice(jsonObject.getInt("price"));
-			recipe.setDescription(jsonObject.has("description") ? jsonObject
-					.getString("description") : null);
-
-			if (jsonObject.has("cid")) {
-				int cid = jsonObject.getInt("cid");
-
-				CategoryDao cdao = new CategoryDao();
-				Category category = cdao.findById(cid);
-				if (category == null) {
-					return Response.status(Response.Status.BAD_REQUEST)
-							.entity("种类ID不存在").type(MediaType.TEXT_PLAIN)
-							.build();
-				}
-				recipe.setCategory(category);
-			}
-		} catch (JSONException e1) {
+		int count = multipart.getBodyParts().size();
+		
+		String string = multipart.getBodyParts().get(0)
+				.getEntityAs(String.class);
+		if (string.isEmpty()) {
 			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
-		}
-
-		BodyPartEntity bpe = (BodyPartEntity) multipart.getBodyParts().get(1)
-				.getEntity();
-		String id = UUID.randomUUID().toString();
-		String image = id + ".png";
-		recipe.setImage(image);
-
-		try {
-			InputStream source = bpe.getInputStream();
-			BufferedImage bi = ImageIO.read(source);
-
-			File file = new File(MyConstants.MenuImagePath + image);
-			if (file.isDirectory()) {
-				ImageIO.write(bi, "png", file);
-			} else {
-				file.mkdirs();
-				ImageIO.write(bi, "png", file);
-			}
-			
-			RecipeDao dao = new RecipeDao();
-			dao.saveOrUpdate(recipe);
-
-			return Response.created(URI.create(String.valueOf(recipe.getId())))
+					.entity("种类ID不存在").type(MediaType.TEXT_PLAIN)
 					.build();
-
-		} catch (IOException e) {
-			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
 		}
+		Response response =  Response.created(URI.create(String.valueOf(8888))).build();
+		return response;
+		
+//		Recipe recipe = new Recipe();
+//
+//		try {
+//			String string = multipart.getBodyParts().get(0)
+//					.getEntityAs(String.class);
+//			JSONObject jsonObject = new JSONObject(string);
+//			recipe.setName(jsonObject.getString("name"));
+//			recipe.setPrice(jsonObject.getInt("price"));
+//			recipe.setDescription(jsonObject.has("description") ? jsonObject
+//					.getString("description") : null);
+//
+//			if (jsonObject.has("cid")) {
+//				int cid = jsonObject.getInt("cid");
+//
+//				CategoryDao cdao = new CategoryDao();
+//				Category category = cdao.findById(cid);
+//				if (category == null) {
+//					return Response.status(Response.Status.BAD_REQUEST)
+//							.entity("种类ID不存在").type(MediaType.TEXT_PLAIN)
+//							.build();
+//				}
+//				recipe.setCategory(category);
+//			}
+//		} catch (JSONException e1) {
+//			return Response.status(Response.Status.BAD_REQUEST)
+//					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+//		}
+//
+//		BodyPartEntity bpe = (BodyPartEntity) multipart.getBodyParts().get(1)
+//				.getEntity();
+//		String id = UUID.randomUUID().toString();
+//		String image = id + ".png";
+//		recipe.setImage(image);
+//
+//		try {
+//			InputStream source = bpe.getInputStream();
+//			BufferedImage bi = ImageIO.read(source);
+//
+//			File file = new File(MyConstants.MenuImagePath + image);
+//			if (file.isDirectory()) {
+//				ImageIO.write(bi, "png", file);
+//			} else {
+//				file.mkdirs();
+//				ImageIO.write(bi, "png", file);
+//			}
+//			
+//			RecipeDao dao = new RecipeDao();
+//			dao.saveOrUpdate(recipe);
+//
+//			return Response.created(URI.create(String.valueOf(recipe.getId())))
+//					.build();
+//
+//		} catch (IOException e) {
+//			return Response.status(Response.Status.BAD_REQUEST)
+//					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+//		}
 
 	}
 }

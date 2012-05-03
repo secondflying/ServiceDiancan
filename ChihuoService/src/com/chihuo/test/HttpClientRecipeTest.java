@@ -92,10 +92,6 @@ public class HttpClientRecipeTest {
 							object.put("price", 60);
 							object.put("cid", map.get(file.getName()));
 
-							StringEntity entity = new StringEntity(
-									object.toString(), "UTF-8");
-							entity.setContentType("application/json");
-							entity.setContentEncoding("UTF-8");
 
 							StringBody recipeBody = new StringBody(
 									object.toString(), "application/json",

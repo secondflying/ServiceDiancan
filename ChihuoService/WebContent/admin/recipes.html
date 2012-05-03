@@ -26,6 +26,8 @@ body {
 </head>
 
 <body>
+
+
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
@@ -36,7 +38,7 @@ body {
 
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li class="active"><a href="#">首页</a></li>
+						<li class="active"><a href="categories.html">首页</a></li>
 						<li><a href="#about">关于</a></li>
 						<li><a href="#contact">联系我们</a></li>
 					</ul>
@@ -57,10 +59,11 @@ body {
 		</div>
 	</div>
 
-	<div class="container">
 
+	<div class="container">
 		<div class="pull-right">
-			<a href="#" class="btn  btn-primary btn-large"><i
+			<a data-toggle="modal" href="#myModal"
+				class="btn  btn-primary btn-large"><i
 				class="icon-plus-sign icon-white"></i> 新增菜品</a> <a href="#"
 				class="btn  btn-primary btn-large"><i
 				class="icon-pencil icon-white"></i> 批量修改</a>
@@ -71,6 +74,55 @@ body {
 
 		<ul id="categoriesContainer" class="thumbnails">
 		</ul>
+
+		<div id="myModal" class="modal hide fade in" style="display: none;">
+			<div class="modal-header">
+				<button class="close" data-dismiss="modal">×</button>
+				<h3>新增菜谱</h3>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal"  id="myForm" enctype="multipart/form-data"
+					method="post" action="../rest/recipes">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label" for="name">名称</label>
+							<div class="controls">
+								<input type="text" class="input-xlarge" id="name" name="name">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="price">价格</label>
+							<div class="controls">
+								<input type="text" class="input-xlarge" id="price" name="price"
+									placeholder="¥">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="fileInput">图片</label>
+							<div class="controls">
+								<input class="input-file" id="fileInput" name="fileInput"
+									type="file">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="description">描述</label>
+							<div class="controls">
+								<textarea class="input-xlarge" id="description"
+									name="description" rows="3"></textarea>
+							</div>
+						</div>
+						
+						<div id="errorMessage"></div>
+
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary btn-large"
+								style="width: 100px;">确 定</button>
+							<a href="#" class="btn" data-dismiss="modal">取消</a>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
 
 		<hr>
 		<footer>
@@ -86,11 +138,45 @@ body {
 	<script src="bootstrap/js/jquery.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
 	<script src="prettyPhoto/js/jquery.prettyPhoto.js"></script>
+	<script src="jquery.confirm-1.3.js"></script>
+	<script src="jquery.form.js"></script>
 	<script src="rest.js"></script>
 	<script>
 	$(document).ready(function() {
+	    $('#myForm').ajaxForm({
+	        url:       "../rest/recipes/1",
+        	type:      "PUT", 
+	        //beforeSubmit:  showRequest,
+	        success: showResponse,
+	        error: showError,
+	        resetForm: true 
+	    });
+
 	    $("#categoryName").html(urlParams["cname"]);
+
+	    getRecipes();
+	});
+
+	function showResponse(responseText, statusText, xhr, $form) {
+	    console.log('返回值：');
+	    console.log(responseText);
+	    console.log(xhr);
+	    console.log(xhr.getAllResponseHeaders());
 	    
+	    getRecipes();
+	    $('#myModal').modal('hide');
+	}
+
+	function showError(xhr, textStatus, errorThrown) {
+	    console.log('错误：');
+	    console.log(textStatus);
+	    console.log(xhr);
+	    console.log(xhr.getAllResponseHeaders());
+	    
+        $('#errorMessage').html('<div class="alert alert-error fade in" ><button class="close" data-dismiss="alert">×</button><strong>错误：</strong>' + 'ID不存在' + '</div>');
+	}
+
+	function getRecipes() {
 	    $.getJSON("../rest/categories/" + urlParams["cid"],
 	    function(data) {
 	        console.log(data);
@@ -99,32 +185,72 @@ body {
 	        function(key, val) {
 	            items.push('<li class="span3" id="' + val.id + '">');
 	            items.push('<div class="thumbnail">');
-	            
+
 	            items.push('<div class="caption">');
 	            items.push('<h3>' + val.name + '<small class="pull-right">¥' + val.price + '</small></h3>');
 	            items.push('</div>');
-	            
-	            items.push('<a rel="prettyPhoto[gallery1]"  href="../MenuImages/' + val.image + '" title="' + val.name  + '">');
+
+	            items.push('<a rel="prettyPhoto[gallery1]"  href="../MenuImages/' + val.image + '" title="' + val.name + '">');
 	            items.push('<img style="width:250px; height:250px;" src="../MenuImages/' + val.image + '" />');
 	            items.push('</a>');
 
 	            items.push('<div class="caption">');
 	            items.push('<a href="#" onclick="test(' + key + ');return false;" class="btn btn-info"><i class="icon-edit icon-white"></i> 编辑</a>  ');
-	            items.push('<a href="#" class="btn btn-danger"><i class="icon-trash icon-white"></i> 删除</a>');
+	            items.push('<button class="btn btn-danger" value="' + val.id + '"><i class="icon-trash icon-white"></i> 删除</button>');
 	            items.push('</div>');
-	            
+
 	            items.push('</div></li>');
 	        });
+
+	        $('#categoriesContainer').html('');
 	        $(items.join('')).appendTo('#categoriesContainer');
-	        
+
+	        //图片浏览
 	        $("a[rel^='prettyPhoto']").prettyPhoto({
-			    theme: 'facebook',
-			    deeplinking: false,
-			    social_tools: false
-			});
+	            theme: 'facebook',
+	            deeplinking: false,
+	            social_tools: false
+	        });
+	        
+	        //删除
+	        $('#categoriesContainer button.btn-danger').click(function() {
+	        	  //alert('click');
+	              deleteRecipe($(this).attr("value"));
+	        	  return false;
+	        	});
+	        
+	        $('#categoriesContainer button.btn-danger').confirm({
+	        	  msg:'确定删除?',
+	        	  //stopAfter:'ok',
+	        	  //eventType:'mouseover',
+	        	  //timeout:1000,
+	        	  buttons: {
+	        	    ok:'确定',
+	        	    cancel:'取消',
+	        	    separator:'/'
+	        	  }
+	        	});
 	    });
-	});
+	}
 	
+	function deleteRecipe(id){
+		console.log(id);
+		return;
+		$.ajax({
+		    type: "DELETE",
+		    url: "../rest/recipes/" + id,
+		    cache: false,
+		    success: function(data, textStatus, jqXHR) {
+		        getRecipes();
+		    },
+		    error: function(xhr, textStatus, errorThrown) {
+			    console.log('错误：');
+			    console.log(textStatus);
+			    console.log(xhr);
+			    console.log(xhr.getAllResponseHeaders());
+			}
+		});
+	}
 	</script>
 </body>
 </html>

@@ -23,6 +23,7 @@
         <mapping resource="com/chihuo/bussiness/DataLog.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/Order.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/OrderItem.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/DeskStatusView.hbm.xml" />
         
         <!-- <mapping resource="com/chihuo/bussiness/TagsRel.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/Tags.hbm.xml" />

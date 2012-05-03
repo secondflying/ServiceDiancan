@@ -14,7 +14,7 @@
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>Chihuo REST Service</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<servlet-class>com.chihuo.util.MyServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>com.chihuo.resource</param-value>
@@ -26,7 +26,7 @@
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
 
-	<filter>
+	<!-- <filter>
 		<filter-name>HibernateFilter</filter-name>
 		<filter-class>com.chihuo.util.HibernateSessionRequestFilter﻿</filter-class>
 	</filter>
@@ -34,7 +34,7 @@
 	<filter-mapping>
 		<filter-name>HibernateFilter</filter-name>
 		<url-pattern>/rest/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 
 	<!-- <security-constraint>
 		<web-resource-collection>

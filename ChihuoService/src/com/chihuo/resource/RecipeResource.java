@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Date;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -29,6 +30,7 @@ import com.chihuo.bussiness.Recipe;
 import com.chihuo.dao.CategoryDao;
 import com.chihuo.dao.DataLogDao;
 import com.chihuo.dao.RecipeDao;
+import com.sun.jersey.multipart.MultiPart;
 
 public class RecipeResource {
 	@Context
@@ -79,6 +81,22 @@ public class RecipeResource {
 		String mt = new MimetypesFileTypeMap().getContentType(file);
 		return Response.ok(file, mt).build();
 	}
+	
+	@PUT
+	@Consumes("multipart/form-data")
+	public Response updateRecipe(MultiPart multipart) {
+		int count = multipart.getBodyParts().size();
+		
+		String string = multipart.getBodyParts().get(0)
+				.getEntityAs(String.class);
+		if (string.isEmpty()) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity("种类ID不存在").type(MediaType.TEXT_PLAIN)
+					.build();
+		}
+		Response response =  Response.created(URI.create(String.valueOf(8888))).build();
+		return response;
+	}
 
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON })
@@ -116,7 +134,7 @@ public class RecipeResource {
 			return Response.status(Response.Status.NO_CONTENT).build();
 		} catch (JSONException e1) {
 			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+					.entity("更新菜单信息失败").type(MediaType.TEXT_PLAIN).build();
 		}
 	}
 
@@ -147,7 +165,7 @@ public class RecipeResource {
 			return Response.status(Response.Status.NO_CONTENT).build();
 		} catch (IOException e) {
 			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+					.entity("更新菜单图片失败").type(MediaType.TEXT_PLAIN).build();
 		}
 	}
 

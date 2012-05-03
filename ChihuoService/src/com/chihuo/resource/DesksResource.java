@@ -16,7 +16,9 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 
 import com.chihuo.bussiness.Desk;
+import com.chihuo.bussiness.DeskStatusView;
 import com.chihuo.dao.DeskDao;
+import com.chihuo.dao.DeskStatusDao;
 
 @Path("/desks")
 public class DesksResource {
@@ -27,9 +29,13 @@ public class DesksResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Desk> getCategories() {
-		DeskDao dao = new DeskDao();
-		List<Desk> list = dao.findAll();
+	public List<DeskStatusView> getCategories() {
+//		DeskDao dao = new DeskDao();
+//		List<Desk> list = dao.findAll();
+//		return list;
+		
+		DeskStatusDao dao = new DeskStatusDao();
+		List<DeskStatusView> list = dao.findAll();
 		return list;
 	}
 	

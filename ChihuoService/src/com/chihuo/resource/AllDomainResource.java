@@ -1,10 +1,8 @@
 package com.chihuo.resource;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,11 +13,11 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.http.HttpRequest;
-
 import com.chihuo.bussiness.AllDomain;
 import com.chihuo.dao.CategoryDao;
+import com.chihuo.dao.DaoUtil;
 import com.chihuo.dao.DeskDao;
+import com.chihuo.dao.DeskTypeDao;
 import com.chihuo.dao.RecipeDao;
 
 @Path("/all")
@@ -32,23 +30,25 @@ public class AllDomainResource {
 //	HttpServletRequest httpRequest;
 
 	@GET
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
 	public AllDomain getAllOfflineData() {
 		CategoryDao cDao = new CategoryDao();
 		RecipeDao rDao = new RecipeDao();
 		DeskDao dDao = new DeskDao();
+		DeskTypeDao tDao = new DeskTypeDao();
 		
-//		System.out.println(httpRequest.getSession(true).getId());
-
-		AllDomain allDomain = new AllDomain(cDao.findAll(), null, null,
-				rDao.findAll(), null, null, dDao.findAll(), null, null,
-				new Date());
+		AllDomain allDomain = new AllDomain();
+		allDomain.setAddCategories(cDao.findAll());
+		allDomain.setAddRcipes(rDao.findAll());
+		allDomain.setAddDesks(dDao.findAll());
+		allDomain.setAddDeskTypes(tDao.findAll());
+		allDomain.setDate(new Date());
 		return allDomain;
 	}
 
 	@Path("{date}")
 	@GET
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces({MediaType.APPLICATION_JSON })
 	public Response getIncrementOfflineData(@PathParam("date") String dateStr) {
 
 		// 增量更新

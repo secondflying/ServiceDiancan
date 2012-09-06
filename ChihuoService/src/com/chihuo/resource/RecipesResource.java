@@ -1,6 +1,8 @@
 package com.chihuo.resource;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +12,7 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,15 +24,12 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.chihuo.bussiness.Category;
 import com.chihuo.bussiness.Recipe;
 import com.chihuo.dao.CategoryDao;
 import com.chihuo.dao.RecipeDao;
-import com.sun.jersey.multipart.BodyPartEntity;
-import com.sun.jersey.multipart.MultiPart;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/recipes")
 public class RecipesResource {
@@ -60,75 +60,70 @@ public class RecipesResource {
 
 	@POST
 	@Consumes("multipart/form-data")
-	public Response createRecipe2(MultiPart multipart) {
-		int count = multipart.getBodyParts().size();
-		
-		String string = multipart.getBodyParts().get(0)
-				.getEntityAs(String.class);
-		if (string.isEmpty()) {
-			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("种类ID不存在").type(MediaType.TEXT_PLAIN)
-					.build();
-		}
-		Response response =  Response.created(URI.create(String.valueOf(8888))).build();
-		return response;
-		
-//		Recipe recipe = new Recipe();
-//
-//		try {
-//			String string = multipart.getBodyParts().get(0)
-//					.getEntityAs(String.class);
-//			JSONObject jsonObject = new JSONObject(string);
-//			recipe.setName(jsonObject.getString("name"));
-//			recipe.setPrice(jsonObject.getInt("price"));
-//			recipe.setDescription(jsonObject.has("description") ? jsonObject
-//					.getString("description") : null);
-//
-//			if (jsonObject.has("cid")) {
-//				int cid = jsonObject.getInt("cid");
-//
-//				CategoryDao cdao = new CategoryDao();
-//				Category category = cdao.findById(cid);
-//				if (category == null) {
-//					return Response.status(Response.Status.BAD_REQUEST)
-//							.entity("种类ID不存在").type(MediaType.TEXT_PLAIN)
-//							.build();
-//				}
-//				recipe.setCategory(category);
-//			}
-//		} catch (JSONException e1) {
-//			return Response.status(Response.Status.BAD_REQUEST)
-//					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
-//		}
-//
-//		BodyPartEntity bpe = (BodyPartEntity) multipart.getBodyParts().get(1)
-//				.getEntity();
-//		String id = UUID.randomUUID().toString();
-//		String image = id + ".png";
-//		recipe.setImage(image);
-//
-//		try {
-//			InputStream source = bpe.getInputStream();
-//			BufferedImage bi = ImageIO.read(source);
-//
-//			File file = new File(MyConstants.MenuImagePath + image);
-//			if (file.isDirectory()) {
-//				ImageIO.write(bi, "png", file);
-//			} else {
-//				file.mkdirs();
-//				ImageIO.write(bi, "png", file);
-//			}
-//			
-//			RecipeDao dao = new RecipeDao();
-//			dao.saveOrUpdate(recipe);
-//
-//			return Response.created(URI.create(String.valueOf(recipe.getId())))
-//					.build();
-//
-//		} catch (IOException e) {
-//			return Response.status(Response.Status.BAD_REQUEST)
-//					.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
-//		}
+	public Response createRecipe2(@FormDataParam("name") String name,
+			@FormDataParam("price") int price,
+			@FormDataParam("description") String description,
+			@DefaultValue("-1") @FormDataParam("cid") int cid,
+			@FormDataParam("image") InputStream upImg) {
 
+		// return Response.status(Response.Status.BAD_REQUEST)
+		// .entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+
+		// return Response.created(URI.create(String.valueOf(11))).build();
+
+		Recipe recipe = new Recipe();
+		recipe.setName(name);
+		recipe.setPrice(price);
+		recipe.setDescription(description);
+
+		if (cid != -1) {
+			CategoryDao cdao = new CategoryDao();
+			Category category = cdao.findById(cid);
+			if (category == null) {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("种类ID不存在").type(MediaType.TEXT_PLAIN).build();
+			}
+			recipe.setCategory(category);
+		}
+
+		if (upImg != null) {
+			try {
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int nRead;
+				byte[] data = new byte[16384];
+				while ((nRead = upImg.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
+				byte[] bs = buffer.toByteArray();
+
+				if (bs.length > 0) {
+					String id = UUID.randomUUID().toString();
+					String image = id + ".png";
+					recipe.setImage(image);
+
+					BufferedImage bi = ImageIO
+							.read(new ByteArrayInputStream(bs));
+
+					File file = new File(MyConstants.MenuImagePath + image);
+					if (file.isDirectory()) {
+						ImageIO.write(bi, "png", file);
+					} else {
+						file.mkdirs();
+						ImageIO.write(bi, "png", file);
+					}
+				}
+
+			} catch (IOException e) {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+			}
+		}
+
+		RecipeDao dao = new RecipeDao();
+		dao.saveOrUpdate(recipe);
+
+		return Response.created(URI.create(String.valueOf(recipe.getId())))
+				.build();
 	}
 }

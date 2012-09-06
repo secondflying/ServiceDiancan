@@ -21,14 +21,14 @@ public class RecipeDao extends GenericHibernateDAO﻿<Recipe, Integer> {
 	
 	@Override
 	public void delete(Recipe entity) {
-		getSession().delete(entity);
-		
+		entity.setIsdelete(1);
+		getSession().saveOrUpdate(entity);
 		DaoUtil.deleteLog(MyConstants.RECIPE_TABLE, entity.getId());
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Recipe> findByCategory(int cid){
-		Criteria crit = getSession().createCriteria(Recipe.class).createCriteria("category").add(Restrictions.eq("id", cid));
+		Criteria crit = getSession().createCriteria(Recipe.class).add(Restrictions.not(Restrictions.eq("delete", 1))).createCriteria("category").add(Restrictions.eq("id", cid));
 		
 		return (List<Recipe>)crit.list();
 	}

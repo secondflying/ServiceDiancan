@@ -8,9 +8,6 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="category" class="com.chihuo.bussiness.Category" fetch="join">
-            <column name="cid" />
-        </many-to-one>
         <property name="name" type="string">
             <column name="name" length="45" />
         </property>
@@ -23,5 +20,11 @@
         <property name="price" type="java.lang.Integer">
             <column name="price" />
         </property>
+        <property name="isdelete" type="java.lang.Integer">
+            <column name="isdelete" />
+        </property>
+        <many-to-one name="category" class="com.chihuo.bussiness.Category" fetch="join">
+            <column name="cid" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

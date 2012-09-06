@@ -17,5 +17,8 @@
         <property name="count" type="java.lang.Integer">
             <column name="count" />
         </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="status" />
+        </property>
     </class>
 </hibernate-mapping>

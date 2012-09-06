@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>智能点餐管理系统</title>
+
+<!-- Le styles -->
+<link href="css/flexgrid/flexigrid.css" rel="stylesheet" />
+
+</head>
+
+<body>
+	<div id="top"></div>
+	<table id="flex1" style="display: none"></table>
+
+	<script src="js/jquery-1.7.2.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/jquery.confirm-1.3.js"></script>
+	<script src="js/flexigrid.js"></script>
+	
+	<script src="js/rest.js"></script>
+	<script>
+		function parsedForm(json) {
+			json.page = 1;
+			json.total = 1;
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.thumnail = "<img style='width:300px; height:200px;' src='../MenuImages/" + value.image + "'>";
+					obj.cell.tool = "<a href='recipes.html?cid=" + value.id + "&cname=" + value.name + "'>菜单列表</a>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+		
+		function success(obj){
+			//删除
+			$('button.delete').click(function() {
+				alert($(this).attr("value"));
+				$('#flex1').flexOptions({newp: 1}).flexReload();
+
+				return false;
+			});
+
+			$('button.delete').confirm({
+				msg : '确定删除?',
+				//stopAfter:'ok',
+				//eventType:'mouseover',
+				//timeout:1000,
+				buttons : {
+					ok : '确定',
+					cancel : '取消',
+					separator : '/'
+				}
+			});
+		}
+
+		function test(obj) {
+			console.log(obj);
+		}
+
+		$(document).ready(function() {
+			$("#flex1").flexigrid({
+				url : '../rest/categories',
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ {
+					display : 'ID',
+					name : 'id',
+					width : 40,
+					sortable : false,
+					align : 'center'
+				},
+				//{display: '缩略图', name : 'thumnail', width : 310, sortable : false, align: 'center'},
+				{
+					display : '名称',
+					name : 'name',
+					width : 200,
+					sortable : false,
+					align : 'center'
+				}, {
+					display : '操作',
+					name : 'tool',
+					width : 200,
+					sortable : false,
+					align : 'center'
+				} ],
+				buttons : [ {
+					name : '新增',
+					bclass : 'add',
+					onpress : test
+				}, {
+					separator : true
+				} ],
+				preProcess : parsedForm,
+				onSuccess : success,
+				title : '种类',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 700,
+				height : 300
+			});
+
+		});
+	</script>
+</body>
+</html>

@@ -1,14 +1,10 @@
 package com.chihuo.util;
 
-import java.io.IOException;
-
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
-import org.hibernate.StaleObjectStateException;
 
 public class MyServletContainer extends com.sun.jersey.spi.container.servlet.ServletContainer {
 	private static Log log = LogFactory
@@ -29,6 +25,7 @@ public class MyServletContainer extends com.sun.jersey.spi.container.servlet.Ser
 			super.service(request, response);
 			sf.getCurrentSession().getTransaction().commit();
 		} catch (Throwable ex) {
+			//TODO 这里应该只捕获hibernate操作的异常
 			try {
 				if (sf.getCurrentSession().getTransaction().isActive()) {
 					log.debug("Trying to rollback database transaction after exception");
@@ -40,5 +37,4 @@ public class MyServletContainer extends com.sun.jersey.spi.container.servlet.Ser
 			}
 		} 
 	}
-
 }

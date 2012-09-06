@@ -12,6 +12,7 @@ public class Recipe implements java.io.Serializable {
 	private String description;
 	private String image;
 	private Integer price;
+	private Integer isdelete;
 
 	public Recipe() {
 	}
@@ -94,4 +95,13 @@ public class Recipe implements java.io.Serializable {
 		}
 		return null;
 	}
+
+	public Integer getIsdelete() {
+		return isdelete;
+	}
+
+	public void setIsdelete(Integer isdelete) {
+		this.isdelete = isdelete;
+	}
+
 }

@@ -33,6 +33,15 @@ public class AllDomain implements java.io.Serializable {
 	@XmlElement
 	private List<Integer> deleteDesks;
 	@XmlElement
+	private List<DeskType> addDeskTypes;
+	@XmlElement
+	private List<Desk> updateDeskTypes;
+	@XmlElement
+	private List<Integer> deleteDeskTypes;
+	
+	
+	
+	@XmlElement
 	@XmlJavaTypeAdapter(JaxbDateSerializer.class)
 	private Date date;
 
@@ -135,6 +144,30 @@ public class AllDomain implements java.io.Serializable {
 	}
 
 	public AllDomain() {
+	}
+
+	public List<DeskType> getAddDeskTypes() {
+		return addDeskTypes;
+	}
+
+	public void setAddDeskTypes(List<DeskType> addDeskTypes) {
+		this.addDeskTypes = addDeskTypes;
+	}
+
+	public List<Desk> getUpdateDeskTypes() {
+		return updateDeskTypes;
+	}
+
+	public void setUpdateDeskTypes(List<Desk> updateDeskTypes) {
+		this.updateDeskTypes = updateDeskTypes;
+	}
+
+	public List<Integer> getDeleteDeskTypes() {
+		return deleteDeskTypes;
+	}
+
+	public void setDeleteDeskTypes(List<Integer> deleteDeskTypes) {
+		this.deleteDeskTypes = deleteDeskTypes;
 	}
 
 	

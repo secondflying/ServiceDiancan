@@ -17,5 +17,8 @@
         <property name="capacity" type="java.lang.Integer">
             <column name="capacity" />
         </property>
+        <many-to-one name="deskType" class="com.chihuo.bussiness.DeskType" fetch="join">
+            <column name="tid" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

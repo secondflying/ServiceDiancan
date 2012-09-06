@@ -17,7 +17,7 @@
          <property name="image" type="string">
             <column name="image" length="45" />
         </property>
-        <set name="recipes" table="recipe" inverse="true" lazy="true" fetch="select" order-by="id desc">
+        <set name="recipes" table="recipe" inverse="true" lazy="true" fetch="select" where="isdelete != 1 or isdelete is null" order-by="id desc">
             <key>
                 <column name="cid" />
             </key>

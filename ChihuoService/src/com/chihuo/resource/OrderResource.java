@@ -1,12 +1,11 @@
 package com.chihuo.resource;
 
 import java.net.URI;
-import java.util.Date;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -53,10 +52,7 @@ public class OrderResource {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addRecipe(String jsonString) throws JSONException {
-		System.out.println(jsonString);
-
-		JSONObject jsonObject = new JSONObject(jsonString);
-
+//		System.out.print(jsonString);
 		OrderDao dao = new OrderDao();
 		Order order = dao.findById(id);
 		// TODO 判断该台号是否可以加减菜
@@ -69,6 +65,7 @@ public class OrderResource {
 					.build();
 		}
 
+		JSONObject jsonObject = new JSONObject(jsonString);
 		int rid = jsonObject.getInt("rid");
 		RecipeDao rDao = new RecipeDao();
 		Recipe recipe = rDao.findById(rid);
@@ -112,12 +109,31 @@ public class OrderResource {
 		// 还未提交
 		// return Response.ok(order).build();
 	}
+	
+	//改变订单状态，如结账，撤单等
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response alterOrderStatus(String jsonString) throws JSONException {
+		OrderDao dao = new OrderDao();
+		Order order = dao.findById(id);
+		if (order == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		
+		JSONObject jsonObject = new JSONObject(jsonString);
+		int status = jsonObject.getInt("status");
+		if (status < 1 || status > 3) {
+			return Response.status(Response.Status.BAD_REQUEST)
+					.entity("修改状态失败").type(MediaType.TEXT_PLAIN)
+					.build();
+		}
+		
+		order.setStatus(status);
+		dao.saveOrUpdate(order);
 
-	// @DELETE
-	// @Consumes({MediaType.APPLICATION_JSON})
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public Response deleteRecipe() {
-	// return null;
-	// }
-
+		return Response.status(Response.Status.OK)
+				.entity(order).type(MediaType.TEXT_PLAIN)
+				.build();
+	}
 }

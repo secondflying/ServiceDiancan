@@ -5,6 +5,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.chihuo.bussiness.DeskType;
+
 // Generated 2012-2-14 22:19:35 by Hibernate Tools 3.4.0.CR1
 
 /**
@@ -21,8 +23,12 @@ public class Desk implements java.io.Serializable {
 	private String description;
 	@XmlElement
 	private Integer capacity;
+	@XmlElement
+	private DeskType deskType;
+
 
 	public Desk() {
+		
 	}
 
 	public Desk(String name, String description, Integer capacity) {
@@ -61,5 +67,13 @@ public class Desk implements java.io.Serializable {
 
 	public void setCapacity(Integer capacity) {
 		this.capacity = capacity;
+	}
+
+	public DeskType getDeskType() {
+		return deskType;
+	}
+
+	public void setDeskType(DeskType deskType) {
+		this.deskType = deskType;
 	}
 }

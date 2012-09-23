@@ -140,7 +140,7 @@ public class OrderResource {
 
 			// TODO 给服务员发送通知
 			NotificationHelper.sendNotifcationToUser(NotificationType.CheckOut,
-					NotificationHelper.getDeskString(order.getDesk()), order.getWaiter()
+					NotificationHelper.getDeskString(order.getId(),order.getDesk()), order.getWaiter()
 							.getUsername());
 
 			return Response.status(Response.Status.OK).entity(order)
@@ -215,21 +215,21 @@ public class OrderResource {
 		int type = jsonObject.getInt("type");
 		if (type == Integer.parseInt(NotificationType.AddWater.toString())) {
 			NotificationHelper.sendNotifcationToUser(NotificationType.AddWater,
-					NotificationHelper.getDeskString(order.getDesk()), order.getWaiter()
+					NotificationHelper.getDeskString(order.getId(),order.getDesk()), order.getWaiter()
 							.getUsername());
 			return Response.status(Response.Status.OK)
 					.type(MediaType.APPLICATION_JSON).build();
 		} else if (type == Integer
 				.parseInt(NotificationType.AddDish.toString())) {
 			NotificationHelper.sendNotifcationToUser(NotificationType.AddDish,
-					NotificationHelper.getDeskString(order.getDesk()), order.getWaiter()
+					NotificationHelper.getDeskString(order.getId(),order.getDesk()), order.getWaiter()
 							.getUsername());
 			return Response.status(Response.Status.OK)
 					.type(MediaType.APPLICATION_JSON).build();
 		} else if (type == Integer.parseInt(NotificationType.CallWaiter
 				.toString())) {
 			NotificationHelper.sendNotifcationToUser(
-					NotificationType.CallWaiter, NotificationHelper.getDeskString(order.getDesk()),
+					NotificationType.CallWaiter, NotificationHelper.getDeskString(order.getId(),order.getDesk()),
 					order.getWaiter().getUsername());
 			return Response.status(Response.Status.OK)
 					.type(MediaType.APPLICATION_JSON).build();

@@ -17,9 +17,10 @@ public class NotificationHelper {
     }
     
     
-    public static String getDeskString(Desk desk){
+    public static String getDeskString(int oid,Desk desk){
     	JSONObject jsonObject = new JSONObject();
     	try {
+    		jsonObject.put("oid", oid);
 			jsonObject.put("id", desk.getId());
 			jsonObject.put("name", desk.getName());
 		} catch (JSONException e) {

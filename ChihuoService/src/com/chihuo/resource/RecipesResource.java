@@ -28,7 +28,6 @@ import com.chihuo.bussiness.Category;
 import com.chihuo.bussiness.Recipe;
 import com.chihuo.dao.CategoryDao;
 import com.chihuo.dao.RecipeDao;
-import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/recipes")

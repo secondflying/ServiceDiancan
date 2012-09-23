@@ -22,5 +22,8 @@
 		<property name="status" type="java.lang.Integer">
 			<column name="status" />
 		</property>
+		<property name="code" type="string">
+			<column name="code" length="45" />
+		</property>
 	</class>
 </hibernate-mapping>

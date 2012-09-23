@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>智能点餐管理系统</title>
+
+<!-- Le styles -->
+<link href="css/flexgrid/flexigrid.css" rel="stylesheet" />
+
+</head>
+
+<body>
+	<div id="top"></div>
+	<table id="flex1" style="display: none"></table>
+
+	<script src="js/jquery-1.7.2.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/jquery.confirm-1.3.js"></script>
+	<script src="js/flexigrid.js"></script>
+
+	<script src="js/rest.js"></script>
+	<script>
+		function parsedForm(json) {
+			json.page = 1;
+			json.total = 1;
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.name;
+					obj.cell = value;
+					
+					if(value.presence == 'Online'){
+						obj.cell.thumnail = "<img src='user-online.png'>";
+					}else if(value.presence =='Offline'){
+						obj.cell.thumnail = "<img src='user-offline.png'>";
+					}
+					
+					obj.cell.tool = "<button class='send' value='" + value.username + "'>发送</button>";
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+		
+		function success(obj){
+			//删除
+			$('button.send').click(function() {
+				//alert($(this).attr("value"));
+				var usernmae = $(this).attr("value");
+				$.post('../rest/notification/' + usernmae, function(data) {});
+				
+				return false;
+			});
+		}
+
+		function test(obj) {
+			$.post('../rest/notification', function(data) {});
+		}
+
+		$(document).ready(function() {
+			$("#flex1").flexigrid({
+				url : '../rest/notification',
+				method : 'GET',
+				dataType : 'json',
+				colModel : [
+				{
+					display : '名称',
+					name : 'username',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				}, {
+					display : 'IP',
+					name : 'clientIP',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				}, {
+					display : '在线状态',
+					name : 'thumnail',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				},{
+					display : '操作',
+					name : 'tool',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				} ],
+				buttons : [ {
+					name : '发送在线用户',
+					bclass : 'add',
+					onpress : test
+				}, {
+					separator : true
+				} ],
+				preProcess : parsedForm,
+				onSuccess : success,
+				title : '在线用户',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 900,
+				height : 300
+			});
+
+		}); 
+	</script>
+</body>
+</html>

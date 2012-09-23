@@ -14,11 +14,5 @@
         <property name="description" type="string">
             <column name="description" length="45" />
         </property>
-        <set name="desks" table="desk" inverse="true" lazy="true" fetch="select"  order-by="id desc">
-            <key>
-                <column name="tid" />
-            </key>
-            <one-to-many class="com.chihuo.bussiness.Desk" />
-        </set>
     </class>
 </hibernate-mapping>

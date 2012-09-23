@@ -20,16 +20,13 @@ public class DeskType implements java.io.Serializable {
 	private String name;
 	@XmlElement
 	private String description;
-	@XmlTransient
-	private Set<Desk> desks = new HashSet<Desk>(0);
 
 	public DeskType() {
 	}
 
-	public DeskType(String name, String description, Set<Desk> desks) {
+	public DeskType(String name, String description) {
 		this.name = name;
 		this.description = description;
-		this.desks = desks;
 	}
 
 	public Integer getId() {
@@ -54,14 +51,6 @@ public class DeskType implements java.io.Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Set<Desk> getDesks() {
-		return this.desks;
-	}
-
-	public void setDesks(Set<Desk> desks) {
-		this.desks = desks;
 	}
 
 }

@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
 
@@ -37,7 +36,6 @@ import com.chihuo.dao.DataLogDao;
 import com.chihuo.dao.RecipeDao;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import com.sun.jersey.multipart.MultiPart;
 
 public class RecipeResource {
 	@Context

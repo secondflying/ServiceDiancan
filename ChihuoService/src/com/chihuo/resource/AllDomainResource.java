@@ -15,7 +15,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.AllDomain;
 import com.chihuo.dao.CategoryDao;
-import com.chihuo.dao.DaoUtil;
 import com.chihuo.dao.DeskDao;
 import com.chihuo.dao.DeskTypeDao;
 import com.chihuo.dao.RecipeDao;

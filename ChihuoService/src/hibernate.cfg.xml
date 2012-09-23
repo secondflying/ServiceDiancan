@@ -25,14 +25,6 @@
         <mapping resource="com/chihuo/bussiness/Order.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/OrderItem.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/DeskStatusView.hbm.xml" />
-        
-        <!-- <mapping resource="com/chihuo/bussiness/TagsRel.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/Tags.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/Tools.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/Chef.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/Require.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/RequireRel.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/ToolsRel.hbm.xml" />
-        <mapping resource="com/chihuo/bussiness/Rating.hbm.xml" /> -->
+        <mapping resource="com/chihuo/bussiness/Waiter.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

@@ -11,6 +11,9 @@
         <many-to-one name="desk" class="com.chihuo.bussiness.Desk"  fetch="join">
             <column name="tid" not-null="true" />
         </many-to-one>
+        <many-to-one name="waiter" class="com.chihuo.bussiness.Waiter"  fetch="join">
+            <column name="wid" not-null="true" />
+        </many-to-one>
         <property name="number" type="java.lang.Integer">
             <column name="number" />
         </property>
@@ -25,6 +28,9 @@
         </property>
         <property name="status" type="java.lang.Integer">
             <column name="status" />
+        </property>
+        <property name="code" type="string">
+            <column name="code" />
         </property>
         <set name="orderItems" table="order_item" inverse="true" lazy="true" fetch="select">
             <key>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>智能点餐管理系统</title>
+
+<!-- Le styles -->
+<link href="css/flexgrid/flexigrid.css" rel="stylesheet" />
+
+</head>
+
+<body>
+	<div id="top"></div>
+	<table id="flex1" style="display: none"></table>
+	<input type="button" value="test" onclick="test();" />
+
+	<script src="js/jquery-1.7.2.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/jquery.confirm-1.3.js"></script>
+	<script src="js/flexigrid.js"></script>
+
+	<script src="js/rest.js"></script>
+	<script>
+		function test() {
+
+			var dataString = '{"comment":"test"}';
+			var obj = $.parseJSON(dataString);
+			console.log(obj);
+
+			$.ajax({
+				type : "POST",
+				url : '../rest/orders',
+				cache : false,
+				data : obj,
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+
+				success : function(data) {
+					console.debug("After success");
+				}
+			});
+		}
+	</script>
+</body>
+</html>

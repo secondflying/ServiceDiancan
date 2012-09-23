@@ -2,11 +2,13 @@ package com.chihuo.util;
 
 import javax.servlet.ServletException;
 
+import org.androidpn.server.xmpp.push.NotificationManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 
 public class MyServletContainer extends com.sun.jersey.spi.container.servlet.ServletContainer {
+	private static final long serialVersionUID = 4988964268059005102L;
 	private static Log log = LogFactory
 			.getLog(MyServletContainer.class);
 	SessionFactory sf;
@@ -14,6 +16,10 @@ public class MyServletContainer extends com.sun.jersey.spi.container.servlet.Ser
 	@Override
 	public void init() throws ServletException {
 		sf = HibernateUtil﻿.getSessionFactory();
+		
+		//初始化XMPP 服务器端
+		NotificationManager notificationManager = new NotificationManager();
+
 		super.init();
 	}
 

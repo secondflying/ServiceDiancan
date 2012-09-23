@@ -1,6 +1,9 @@
 package com.chihuo.test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -22,10 +25,12 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.cookie.Cookie;
@@ -59,70 +64,84 @@ public class HttpClientTest {
 		client.getConnectionManager().shutdown();
 	}
 
-	@Test
-	public void 加密测试() throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
-		String password = "123456";
-
-		byte[] salt = new byte[16];
-		java.security.SecureRandom random = new java.security.SecureRandom();
-		random.nextBytes(salt);
-
-		MessageDigest md = null;
-		md = MessageDigest.getInstance("MD5");
-		md.update((password + byte2String(salt)).getBytes("UTF-8"));
-		byte hash[] = md.digest();
-
-		System.out.println("salt: " + byte2String(salt));
-		System.out.println("hash: " + byte2String(hash));
-	}
-
-	private String byte2String(byte[] bytes) {
-		StringBuffer localStringBuffer = new StringBuffer();
-		for (byte b : bytes) {
-			localStringBuffer.append(Integer.toHexString(0xFF & b));
-
-		}
-		String hashString = localStringBuffer.toString();
-		return hashString;
-	}
+//	@Test
+//	public void 加密测试() throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+//		String password = "123456";
+//
+//		byte[] salt = new byte[16];
+//		java.security.SecureRandom random = new java.security.SecureRandom();
+//		random.nextBytes(salt);
+//
+//		MessageDigest md = null;
+//		md = MessageDigest.getInstance("MD5");
+//		md.update((password + byte2String(salt)).getBytes("UTF-8"));
+//		byte hash[] = md.digest();
+//
+//		System.out.println("salt: " + byte2String(salt));
+//		System.out.println("hash: " + byte2String(hash));
+//	}
+//
+//	private String byte2String(byte[] bytes) {
+//		StringBuffer localStringBuffer = new StringBuffer();
+//		for (byte b : bytes) {
+//			localStringBuffer.append(Integer.toHexString(0xFF & b));
+//
+//		}
+//		String hashString = localStringBuffer.toString();
+//		return hashString;
+//	}
 
 	@Test
 	public void 登录测试() throws ClientProtocolException, IOException {
-		HttpPost httpost = new HttpPost(
-				"http://localhost:8080/ChihuoService/rest/login");
+		HttpPost httpost = new HttpPost("http://210.72.21.40/survey/gate.php");
 
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		nvps.add(new BasicNameValuePair("username", "user123"));
-		nvps.add(new BasicNameValuePair("password", "123456"));
+		nvps.add(new BasicNameValuePair("salt", "OSwyMCwxMSw0Niw1Nyw2MywxMDAsOTYsOTc0Miw="));
+		nvps.add(new BasicNameValuePair("hash", "8119e1c3ae7e59855513a97619f02e3e0584b1d8_3"));
+		nvps.add(new BasicNameValuePair("submit", ""));
+		httpost.setEntity(new UrlEncodedFormEntity(nvps));
+		
+		CookieStore cookieStore = new BasicCookieStore();
+	    HttpContext localContext = new BasicHttpContext();
+	    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+		
+	    
+		httpost.addHeader("Origin", "http://www.china.com.cn");
+		httpost.addHeader("Referer", "http://www.china.com.cn/119/static/q//02e8e3bfdbd09f9f090f2355bcc722b6b5b19578_5.html");
+		httpost.addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
 
-		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		HttpClientParams.setRedirecting(httpost.getParams(), true);
+	
+		HttpResponse response = client.execute(httpost);
+		
+		HttpEntity responseEntity = response.getEntity();
+		
+		System.out.println("状态码：");
+		System.out.println(response.getStatusLine().getStatusCode());
+		
+		String jsonString=parseContent(responseEntity.getContent());
+		
+		System.out.println("返回的参数：");
+		System.out.println(jsonString);
+		
+		EntityUtils.consume(response.getEntity());
 
-		ResponseHandler<Object> handler = new ResponseHandler<Object>() {
-			public Object handleResponse(HttpResponse response)
-					throws ClientProtocolException, IOException {
-				HttpEntity entity = response.getEntity();
+	}
+	
+	private static String parseContent(InputStream stream) throws IOException {
+		StringBuilder sb = new StringBuilder();
 
-				System.out.println("Login form get: "
-						+ response.getStatusLine());
-				EntityUtils.consume(entity);
-
-				System.out.println("Post logon cookies:");
-				List<Cookie> cookies = client.getCookieStore().getCookies();
-				if (cookies.isEmpty()) {
-					System.out.println("None");
-				} else {
-					for (int i = 0; i < cookies.size(); i++) {
-						System.out.println("- " + cookies.get(i).toString());
-					}
-				}
-				return null;
-			}
-		};
-
-		client.execute(httpost, handler);
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(stream));
+		String line = reader.readLine();
+		while (line != null) {
+			sb.append(line);
+			line = reader.readLine();
+		}
+		reader.close();
+		return sb.toString();
 	}
 
-	// @Test
 	public void 获取所有离线数据() throws ClientProtocolException, IOException,
 			JSONException {
 		// Create a local instance of cookie store

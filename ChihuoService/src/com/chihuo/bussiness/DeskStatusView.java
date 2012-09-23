@@ -26,7 +26,9 @@ public class DeskStatusView implements java.io.Serializable {
 	private Integer tid;
 	@XmlElement
 	private Integer status;
-
+	@XmlElement
+	private String code;
+	
 	public DeskStatusView() {
 	}
 
@@ -132,6 +134,14 @@ public class DeskStatusView implements java.io.Serializable {
 
 	public void setTid(Integer tid) {
 		this.tid = tid;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

@@ -26,6 +26,9 @@ public class Order implements java.io.Serializable {
 	@XmlElement
 	private Desk desk;
 	@XmlElement
+	private Waiter waiter;
+	
+	@XmlElement
 	private Integer number;
 	@XmlElement
 	@XmlJavaTypeAdapter(JaxbDateSerializer.class)
@@ -34,6 +37,8 @@ public class Order implements java.io.Serializable {
 	private Date enttime;
 	@XmlElement
 	private Integer status;
+	@XmlElement
+	private String code;
 	@XmlElement
 	private Set<OrderItem> orderItems = new HashSet<OrderItem>(0);
 
@@ -117,5 +122,21 @@ public class Order implements java.io.Serializable {
 
 	public void setOrderItems(Set<OrderItem> orderItems) {
 		this.orderItems = orderItems;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Waiter getWaiter() {
+		return waiter;
+	}
+
+	public void setWaiter(Waiter waiter) {
+		this.waiter = waiter;
 	}
 }

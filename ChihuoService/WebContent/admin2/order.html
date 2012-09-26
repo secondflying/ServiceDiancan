@@ -20,7 +20,7 @@
 
 	<script src="js/rest.js"></script>
 	<script>
-		function parsedForm(json) {
+		function preProcess(json) {
 			console.log(json);
 			json.page = 1;
 			json.total = 1;
@@ -44,7 +44,7 @@
 			return json;
 		}
 		
-		function success(obj){
+		function onSuccess(obj){
 			//删除
 			$('button.send').click(function() {
 				//alert($(this).attr("value"));
@@ -60,18 +60,36 @@
 
 		$(document).ready(function() {
 			$("#flex1").flexigrid({
-				url : '../rest/orders',
+				url : '../rest/orders?status=1',
 				method : 'GET',
 				dataType : 'json',
 				colModel : [
 				{
 					display : '订单编号',
-					name : 'username',
+					name : 'orderid',
 					width : 150,
 					sortable : false,
 					align : 'center'
 				}, {
 					display : '桌号',
+					name : 'clientIP',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				}, {
+					display : '就餐人数',
+					name : 'clientIP',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				}, {
+					display : '开台时间',
+					name : 'clientIP',
+					width : 150,
+					sortable : false,
+					align : 'center'
+				}, {
+					display : '服务员',
 					name : 'clientIP',
 					width : 150,
 					sortable : false,
@@ -102,8 +120,8 @@
 				}, {
 					separator : true
 				} ],
-				preProcess : parsedForm,
-				onSuccess : success,
+				preProcess : preProcess,
+				onSuccess : onSuccess,
 				title : '未结订单',
 				usepager : false,
 				showTableToggleBtn : false,

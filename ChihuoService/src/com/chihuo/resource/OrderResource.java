@@ -194,7 +194,7 @@ public class OrderResource {
 
 		order = dao.findById(id);
 
-		return Response.status(Response.Status.OK).entity(order)
+		return Response.status(Response.Status.OK).entity(oi)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 

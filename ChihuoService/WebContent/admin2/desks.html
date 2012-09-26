@@ -63,15 +63,14 @@ div#users-contain table td,div#users-contain table th {
 	
 	<table id="flex1" style="display: none"></table>
 
-	<div id="dialog-form" title="新增菜谱">
+	<div id="dialog-form" title="新增桌子">
 		<form id="myForm" enctype="multipart/form-data" method="post"
 			action="../rest/recipes">
 			<fieldset>
 				<label for="name">名称</label> <input type="text" name="name"
 					id="name" class="text" /> <input type="hidden" name="cid" id="cid" />
-				<label for="price">价钱</label> <input type="text" name="price"
-					id="price" class="text" /> <label for="image">图片</label> <input
-					type="file" name="image" id="image" />
+				<label for="price">人数</label> <input type="text" name="price"
+					id="price" class="text" /> 
 			</fieldset>
 		</form>
 	</div>
@@ -115,7 +114,7 @@ div#users-contain table td,div#users-contain table th {
 				            {separator : true} 
 				          ],
 				preProcess : preProcess,
-				onSuccess : success,
+				onSuccess : onSuccess,
 				title : urlParams["cname"],
 				usepager : true,
 				showTableToggleBtn : false,
@@ -143,7 +142,7 @@ div#users-contain table td,div#users-contain table th {
 		}
 
 		
-		function success(obj) {
+		function onSuccess(obj) {
 			//编辑
 			$('button.edit').click(function() {
 				editRecipe($(this).attr("value"));

@@ -10,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -42,9 +43,11 @@ public class OrdersResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Order> getAllOrders() {
+	public List<Order> getOrders(@QueryParam("status") int status) {
+		//获取订单信息，默认获取未结订单
+		
 		OrderDao odao = new OrderDao();
-		return odao.findAll();
+		return odao.findByStatus(status);
 	}
 
 	// 服务员开台
@@ -119,24 +122,4 @@ public class OrdersResource {
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 
-//	// 客户端选桌子，输入验证码
-//	@PUT
-//	@Path("desk/{code}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response alterOrderStatus(@PathParam("code") String code)
-//			throws Exception {
-//		OrderDao odao = new OrderDao();
-//		Order order = odao.findNewStartedOrder(code);
-//		if (order == null) {
-//			return Response.status(Response.Status.NOT_FOUND)
-//					.entity("编码" + code + "错误").type(MediaType.TEXT_PLAIN)
-//					.build();
-//		}
-//
-//		order.setStatus(2);
-//		odao.saveOrUpdate(order);
-//
-//		return Response.created(URI.create(String.valueOf(order.getId())))
-//				.entity(order).build();
-//	}
 }

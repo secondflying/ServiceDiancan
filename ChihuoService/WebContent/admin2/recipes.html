@@ -140,7 +140,7 @@ div#users-contain table td,div#users-contain table th {
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
-					obj.cell.thumnail = "<img style='width:100px; height:80px;' src='http://192.168.1.104:8080/MenuImages/" + value.image + "'>";
+					obj.cell.thumnail = "<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
 					obj.cell.tool = "<button class='edit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
 				}

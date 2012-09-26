@@ -8,6 +8,13 @@ import org.hibernate.criterion.Restrictions;
 import com.chihuo.bussiness.Order;
 
 public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
+	
+	public List<Order> findNotPay() {
+		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.or(Restrictions.eq("status", 1), Restrictions.eq("status", 3)));
+
+		return (List<Order>) crit.list();
+	}
+	
 	public List<Order> findByStatus(int status) {
 		Criteria crit = getSession().createCriteria(Order.class).add(
 				Restrictions.eq("status", status));

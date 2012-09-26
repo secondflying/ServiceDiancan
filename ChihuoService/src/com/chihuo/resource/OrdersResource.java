@@ -45,9 +45,12 @@ public class OrdersResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Order> getOrders(@QueryParam("status") int status) {
 		//获取订单信息，默认获取未结订单
-		
 		OrderDao odao = new OrderDao();
-		return odao.findByStatus(status);
+		if(status == 0){
+			return odao.findNotPay();
+		}else{
+			return odao.findByStatus(status);
+		}
 	}
 
 	// 服务员开台

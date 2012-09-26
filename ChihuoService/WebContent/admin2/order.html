@@ -11,7 +11,20 @@
 
 <body>
 	<div id="top"></div>
-	<table id="flex1" style="display: none"></table>
+	
+	<input type="button" value="未结订单" onclick="switchList(1);" />
+	<input type="button" value="已结订单" onclick="switchList(2);" />
+	<input type="button" value="已撤订单" onclick="switchList(3);" />
+
+	<div id="div1">
+		<table id="flex1" style="display: block"></table>
+	</div>
+	<div id="div2">
+		<table id="flex2" style="display: none"></table>
+	</div>
+	<div id="div3">
+		<table id="flex3" style="display: none"></table>
+	</div>
 
 	<script src="js/jquery-1.7.2.min.js"></script>
 	<script src="js/jquery.cookie.js"></script>
@@ -20,8 +33,27 @@
 
 	<script src="js/rest.js"></script>
 	<script>
+		function switchList(status){
+			if(status == 1){
+				$("#div1").show();
+				$("#div2").hide();
+				$("#div3").hide();
+				$('#flex1').flexOptions({newp : 1}).flexReload();
+			}else if(status == 2){
+				$("#div1").hide();
+				$("#div2").show();
+				$("#div3").hide();
+				$('#flex2').flexOptions({newp : 1}).flexReload();
+			}else if(status == 3){
+				$("#div1").hide();
+				$("#div2").hide();
+				$("#div3").show();
+				$('#flex3').flexOptions({newp : 1}).flexReload();
+			}
+		}
+		
 		function preProcess(json) {
-			console.log(json);
+			//console.log(json);
 			json.page = 1;
 			json.total = 1;
 			$.each(json, function(index, value) {
@@ -42,7 +74,18 @@
 						obj.cell.price += value2.recipe.price * value2.count;
 					});
 					
-					obj.cell.statusShow = (value.status && value.status == 1) ? '已开台':'结账请求';
+					obj.cell.statusShow = "空闲";
+					if(value.status){
+						if(value.status == 1){
+							obj.cell.statusShow = "已开台";
+						}else if(value.status == 3){
+							obj.cell.statusShow = "结账请求";
+						}else if(value.status == 4){
+							obj.cell.statusShow = "已结账";
+						}else if(value.status == 5){
+							obj.cell.statusShow = "已撤销";
+						}
+					}
 					obj.cell.tool = "<button class='xiangqing' value='" + value.id + "'>详情</button><button class='jiezhang' value='" + value.id + "'>结账</button></button><button class='chedan' value='" + value.id + "'>撤单</button>";
 					json.rows.push(obj);
 				}
@@ -51,19 +94,50 @@
 		}
 		
 		function onSuccess(obj){
-			//删除
-			$('button.send').click(function() {
-				//alert($(this).attr("value"));
-				var usernmae = $(this).attr("value");
-				$.post('../rest/notification/' + usernmae, function(data) {});
-				
+			$('button.jiezhang').click(function() {
+				var oid = $(this).attr("value");
+				$.ajax({
+					  type: "PUT",
+					  url: '../rest/orders/' + oid,
+					  dataType: "json",
+					  data: '{ "status": "13"}',
+					  contentType : "application/json",
+					  success : function(data, textStatus, jqXHR) {
+							$('#flex1').flexOptions({
+								newp : 1
+							}).flexReload();
+						},
+						error : function(xhr, textStatus, errorThrown) {
+							alert(xhr.responseText);
+						}
+					}); 
+				return false;
+			});
+			
+			$('button.chedan').click(function() {
+				var oid = $(this).attr("value");
+				$.ajax({
+					  type: "PUT",
+					  url: '../rest/orders/' + oid,
+					  dataType: "json",
+					  data: '{ "status": "14"}',
+					  contentType : "application/json",
+					  success : function(data, textStatus, jqXHR) {
+							$('#flex1').flexOptions({
+								newp : 1
+							}).flexReload();
+						},
+						error : function(xhr, textStatus, errorThrown) {
+							alert(xhr.responseText);
+						}
+					}); 
 				return false;
 			});
 		}
 
 		$(document).ready(function() {
 			$("#flex1").flexigrid({
-				url : '../rest/orders?status=1',
+				url : '../rest/orders',
 				method : 'GET',
 				dataType : 'json',
 				colModel : [
@@ -76,10 +150,6 @@
 								{display : '状态',name : 'statusShow',width : 80,sortable : false,align : 'center'},
 								{display : '操作',name : 'tool',width : 100,sortable : false,align : 'center'} 
 							],
-				buttons : [ 
-					            {name : '发送在线用户',bclass : 'add'}, 
-								{separator : true} 
-						  ],
 				preProcess : preProcess,
 				onSuccess : onSuccess,
 				title : '未结订单',
@@ -88,8 +158,53 @@
 				width : 1200,
 				height : 400
 			});
-
+			
+			$("#flex2").flexigrid({
+				url : '../rest/orders?status=4',
+				method : 'GET',
+				dataType : 'json',
+				colModel : [
+								{display : '订单编号',name : 'id',width : 100,sortable : false,align : 'center'}, 
+								{display : '桌号',name : 'deskname',width : 100,sortable : false,align : 'center'}, 
+								{display : '就餐人数',name : 'peoplenumber',width : 100,sortable : false,align : 'center'},
+								{display : '开台时间',name : 'starttime',width : 150,sortable : false,align : 'center'}, 
+								{display : '服务员',name : 'waitername',width : 220,sortable : false,align : 'center'}, 
+								{display : '价钱',name : 'price',width : 100,sortable : false,align : 'center'}, 
+								{display : '状态',name : 'statusShow',width : 80,sortable : false,align : 'center'}
+							],
+				preProcess : preProcess,
+				onSuccess : onSuccess,
+				title : '已结订单',
+				usepager : false,
+				showTableToggleBtn : false,
+				width : 1200,
+				height : 400
+			});
+			
+			$("#flex3").flexigrid({
+				url : '../rest/orders?status=5',
+				method : 'GET',
+				dataType : 'json',
+				colModel : [
+								{display : '订单编号',name : 'id',width : 100,sortable : false,align : 'center'}, 
+								{display : '桌号',name : 'deskname',width : 100,sortable : false,align : 'center'}, 
+								{display : '就餐人数',name : 'peoplenumber',width : 100,sortable : false,align : 'center'},
+								{display : '开台时间',name : 'starttime',width : 150,sortable : false,align : 'center'}, 
+								{display : '服务员',name : 'waitername',width : 220,sortable : false,align : 'center'}, 
+								{display : '价钱',name : 'price',width : 100,sortable : false,align : 'center'}, 
+								{display : '状态',name : 'statusShow',width : 80,sortable : false,align : 'center'}
+							],
+				preProcess : preProcess,
+				onSuccess : onSuccess,
+				title : '已撤订单',
+				usepager : false,
+				showTableToggleBtn : false,
+				width : 1200,
+				height : 400
+			});
 		}); 
+		
+		
 	</script>
 </body>
 </html>

@@ -25,6 +25,8 @@ public class DeskStatusView implements java.io.Serializable {
 	@XmlElement
 	private Integer tid;
 	@XmlElement
+	private Integer oid;
+	@XmlElement
 	private Integer status;
 	@XmlElement
 	private String code;
@@ -142,6 +144,14 @@ public class DeskStatusView implements java.io.Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public Integer getOid() {
+		return oid;
+	}
+
+	public void setOid(Integer oid) {
+		this.oid = oid;
 	}
 
 }

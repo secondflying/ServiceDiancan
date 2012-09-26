@@ -29,15 +29,21 @@
 					json.total++;
 					var obj = {};
 					obj.id = value.id;
-					obj.cell = value;
+					obj.cell = {};
 					
-					if(value.presence == 'Online'){
-						obj.cell.thumnail = "<img src='user-online.png'>";
-					}else if(value.presence =='Offline'){
-						obj.cell.thumnail = "<img src='user-offline.png'>";
-					}
+					obj.cell.id = value.id;
+					obj.cell.deskname = value.desk.name;
+					obj.cell.peoplenumber = value.number;
+					obj.cell.starttime = value.starttime;
+					obj.cell.waitername = value.waiter.username;
+					obj.cell.price = 0;
 					
-					obj.cell.tool = "<button class='send' value='" + value.username + "'>发送</button>";
+					$.each(value.orderItems, function(index2, value2) {
+						obj.cell.price += value2.recipe.price * value2.count;
+					});
+					
+					obj.cell.statusShow = (value.status && value.status == 1) ? '已开台':'结账请求';
+					obj.cell.tool = "<button class='xiangqing' value='" + value.id + "'>详情</button><button class='jiezhang' value='" + value.id + "'>结账</button></button><button class='chedan' value='" + value.id + "'>撤单</button>";
 					json.rows.push(obj);
 				}
 			});
@@ -55,77 +61,31 @@
 			});
 		}
 
-		function test(obj) {
-		}
-
 		$(document).ready(function() {
 			$("#flex1").flexigrid({
 				url : '../rest/orders?status=1',
 				method : 'GET',
 				dataType : 'json',
 				colModel : [
-				{
-					display : '订单编号',
-					name : 'orderid',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				}, {
-					display : '桌号',
-					name : 'clientIP',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				}, {
-					display : '就餐人数',
-					name : 'clientIP',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				}, {
-					display : '开台时间',
-					name : 'clientIP',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				}, {
-					display : '服务员',
-					name : 'clientIP',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				}, {
-					display : '价钱',
-					name : 'thumnail',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				}, {
-					display : '状态',
-					name : 'status',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				},{
-					display : '操作',
-					name : 'tool',
-					width : 150,
-					sortable : false,
-					align : 'center'
-				} ],
-				buttons : [ {
-					name : '发送在线用户',
-					bclass : 'add',
-					onpress : test
-				}, {
-					separator : true
-				} ],
+								{display : '订单编号',name : 'id',width : 100,sortable : false,align : 'center'}, 
+								{display : '桌号',name : 'deskname',width : 100,sortable : false,align : 'center'}, 
+								{display : '就餐人数',name : 'peoplenumber',width : 100,sortable : false,align : 'center'},
+								{display : '开台时间',name : 'starttime',width : 150,sortable : false,align : 'center'}, 
+								{display : '服务员',name : 'waitername',width : 220,sortable : false,align : 'center'}, 
+								{display : '价钱',name : 'price',width : 100,sortable : false,align : 'center'}, 
+								{display : '状态',name : 'statusShow',width : 80,sortable : false,align : 'center'},
+								{display : '操作',name : 'tool',width : 100,sortable : false,align : 'center'} 
+							],
+				buttons : [ 
+					            {name : '发送在线用户',bclass : 'add'}, 
+								{separator : true} 
+						  ],
 				preProcess : preProcess,
 				onSuccess : onSuccess,
 				title : '未结订单',
 				usepager : false,
 				showTableToggleBtn : false,
-				width : 900,
+				width : 1200,
 				height : 400
 			});
 

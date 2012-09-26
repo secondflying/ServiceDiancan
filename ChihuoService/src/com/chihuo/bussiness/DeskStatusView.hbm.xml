@@ -19,6 +19,9 @@
 		<property name="tid" type="java.lang.Integer">
 			<column name="tid" />
 		</property>
+		<property name="oid" type="java.lang.Integer">
+			<column name="oid" />
+		</property>
 		<property name="status" type="java.lang.Integer">
 			<column name="status" />
 		</property>
